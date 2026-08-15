@@ -7,4 +7,6 @@ tenacity==9.1.4
 
 # chromadb needs sqlite >= 3.35 and some Linux hosts ship an older one.
 # Linux-only: there is no Windows wheel, and the local sqlite is new enough.
-pysqlite3-binary==0.5.4; sys_platform == "linux"
+# .post2 rather than 0.5.4: it is the release carrying cp314 wheels as well as
+# cp38-cp313, so the build cannot fail on whichever Python the host picks.
+pysqlite3-binary==0.5.4.post2; sys_platform == "linux"
