@@ -1,3 +1,11 @@
+"""SUPERSEDED - the original LangChain version of ingestion.
+
+Does not run: langchain_community, langchain_chroma and the other
+LangChain packages are no longer in requirements.txt. Replaced by
+ingest.py plus rag/chunking.py, rag/embeddings.py and rag/store.py.
+Kept as reference - see LEGACY.md.
+"""
+
 import os
 import glob
 from pathlib import Path

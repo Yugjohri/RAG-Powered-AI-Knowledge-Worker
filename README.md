@@ -1,4 +1,10 @@
-[![Try it live](https://img.shields.io/badge/Try_it_live-Streamlit-ff4b4b?logo=streamlit&logoColor=white)](DEMO_URL_PENDING)
+[![Try it live](https://img.shields.io/badge/Try_it_live-Streamlit-ff4b4b?logo=streamlit&logoColor=white)](https://rag-powered-ai-knowledge-worker-xyotc8knhafumxdsw3w9zf.streamlit.app/)
+
+**Live demo:** https://rag-powered-ai-knowledge-worker-xyotc8knhafumxdsw3w9zf.streamlit.app/
+
+Runs on free-tier keys, so it is rate limited and sleeps after 12 quiet hours —
+the first visit after that takes about 30 seconds to wake. Ask it *"Who won the
+prestigious IIOTY award in 2023?"* to see the retrieval panel next to the answer.
 
 # RAG-Powered AI Knowledge Worker
 
@@ -264,9 +270,28 @@ that touches a paid provider unless `--paid` is passed explicitly. The committed
 to read the table.
 
 `RAGWorker.ipynb` is the workbench: chunk-length distributions, the embedding
-space projected with t-SNE, and the basic/advanced pipelines run side by side on
-the query that motivated re-ranking. It imports `rag/` rather than duplicating
-it, so it cannot drift from what is deployed.
+space projected with t-SNE, and the two chunking strategies run side by side on
+the question that settled the choice between them. It imports `rag/` rather than
+duplicating it, and reads the deployed strategy from `rag.config` rather than
+restating it, so it cannot drift from what is deployed.
+
+## The earlier versions
+
+`implementation/`, `pro_implementation/` and `evaluator.py` are the first two
+attempts at this project and the old Gradio evaluation UI. **None of them run any
+more** — LangChain is no longer installed, and `evaluator.py` calls functions
+that were renamed in the rewrite.
+
+They are kept deliberately, because the route matters: a LangChain pipeline, then
+the same thing rebuilt directly on `chromadb` and `litellm`, then the current
+`rag/` package. Dropping the framework in step two is what made everything
+after it possible — swapping embedding backends, recording which backend built an
+index, scrubbing keys out of provider errors and tiering models by who pays all
+happen at exactly the layer LangChain was covering.
+
+[LEGACY.md](LEGACY.md) says what each one was, why it stopped working, and what
+replaced it. Each file also opens with a header saying it is superseded, so
+nobody lands on one from a search and mistakes it for live code.
 
 ## Deployment
 

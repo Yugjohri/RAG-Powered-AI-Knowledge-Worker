@@ -1,3 +1,13 @@
+"""SUPERSEDED - the Gradio evaluation UI.
+
+Broken twice over: it imports evaluate_all_retrieval and
+evaluate_all_answers, which were renamed to evaluate_retrieval and
+evaluate_answers in the rewrite, and its UI code predates the Gradio 6
+API changes. Its job is now the Benchmarks tab in streamlit_app.py,
+which renders the same committed results/*.json.
+Kept as reference - see LEGACY.md.
+"""
+
 import gradio as gr
 import pandas as pd
 from collections import defaultdict

@@ -1,3 +1,11 @@
+"""SUPERSEDED - the original LangChain version of answering.
+
+Does not run: langchain_openai and langchain_huggingface are no longer
+in requirements.txt. A single retrieve-then-generate pass, with no query
+rewriting and no re-ranking. Replaced by rag/pipeline.py.
+Kept as reference - see LEGACY.md.
+"""
+
 from pathlib import Path
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_chroma import Chroma

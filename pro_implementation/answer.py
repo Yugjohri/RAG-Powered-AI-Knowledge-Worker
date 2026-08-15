@@ -1,3 +1,11 @@
+"""SUPERSEDED - the second version, after LangChain was dropped.
+
+Where query rewriting and LLM re-ranking first appeared. Reads the old
+vector_db/ index, which ingest.py no longer builds. Replaced by
+rag/pipeline.py, which adds the budget, the retries and the key policy.
+Kept as reference - see LEGACY.md.
+"""
+
 from openai import OpenAI
 from dotenv import load_dotenv
 from chromadb import PersistentClient

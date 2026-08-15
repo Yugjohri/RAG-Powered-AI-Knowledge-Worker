@@ -209,10 +209,25 @@ def _run_parallel(fn, tests, label, workers=WORKERS):
     return [results[i] for i in sorted(results)], [tests[i] for i in sorted(results)]
 
 
+class NothingScored(RuntimeError):
+    """Every question failed, so there is nothing to average.
+
+    Raised instead of letting statistics.fmean fail with "requires at least one
+    data point", which says nothing about the cause. In practice this always
+    means the provider refused every request.
+    """
+
+
 def evaluate_retrieval(tests, workers=WORKERS, **kwargs) -> dict:
     scores, kept = _run_parallel(
         lambda t: score_retrieval(t, **kwargs), tests, "retrieval", workers
     )
+    if not scores:
+        raise NothingScored(
+            f"All {len(tests)} questions failed, so no retrieval score could be computed. "
+            "The usual cause is the model provider rate limiting every request - wait for "
+            "the quota to reset, lower --workers, or pass a different --model."
+        )
     by_category = defaultdict(list)
     for test, score in zip(kept, scores):
         by_category[test.category].append(score.mrr)
@@ -230,6 +245,12 @@ def evaluate_answers(tests, judge_model=JUDGE_MODEL, workers=WORKERS, **kwargs) 
     scores, kept = _run_parallel(
         lambda t: score_answer(t, judge_model, **kwargs)[0], tests, "answers  ", workers
     )
+    if not scores:
+        raise NothingScored(
+            f"All {len(tests)} questions failed, so no answer score could be computed. "
+            "Either the model or the judge refused every request - check which by running "
+            "with --retrieval-only, which does not call the judge at all."
+        )
     by_category = defaultdict(list)
     for test, score in zip(kept, scores):
         by_category[test.category].append(score.accuracy)

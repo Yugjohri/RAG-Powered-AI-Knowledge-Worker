@@ -1,3 +1,12 @@
+"""SUPERSEDED - the second version, after LangChain was dropped.
+
+Where LLM-written semantic chunking first appeared. Its dependencies are
+still installed, but it writes the old vector_db/ index and hardcodes the
+paid text-embedding-3-large, so running it would spend money the current
+project never needs. Replaced by ingest.py and rag/.
+Kept as reference - see LEGACY.md.
+"""
+
 from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
