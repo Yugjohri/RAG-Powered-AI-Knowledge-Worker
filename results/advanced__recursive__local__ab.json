@@ -1,0 +1,26 @@
+{
+  "config": {
+    "strategy": "recursive",
+    "embeddings": "local",
+    "pipeline": "advanced",
+    "model": "gemini/gemini-3.5-flash-lite"
+  },
+  "judge": "gpt-4.1-mini",
+  "questions": 150,
+  "budget": "full",
+  "retrieval": {
+    "n": 62,
+    "mrr": 0.9422043010752688,
+    "ndcg": 0.9215214863818121,
+    "keyword_coverage": 96.72043010752688,
+    "median_seconds": 2.0819164499998806,
+    "mrr_by_category": {
+      "comparative": 1.0,
+      "direct_fact": 0.9650537634408602,
+      "numerical": 1.0,
+      "relationship": 0.96875,
+      "spanning": 0.775,
+      "temporal": 1.0
+    }
+  }
+}

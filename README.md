@@ -32,15 +32,22 @@ later rows were rewritten and re-ranked by Gemini instead. Rows sharing a model
 are directly comparable; rows that do not, are not, and the column is there so
 that is visible rather than buried in a footnote.
 
-| Pipeline | Chunking  | Embeddings | Rewrite/rerank | MRR   | nDCG  | Coverage | Accuracy | Complete | Relevant | Median s | n   |
-|----------|-----------|------------|----------------|-------|-------|----------|----------|----------|----------|----------|-----|
-| advanced | recursive | local      | gemini-flash-lite | 0.905 | 0.895 | 93.6% | –        | –        | –        | 2.40     | 110 |
-| advanced | llm       | local      | gpt-4.1-nano   | 0.843 | 0.825 | 92.1%    | 4.15     | 3.77     | 4.67     | 2.64     | 150 |
-| advanced | llm       | openai     | gpt-4.1-nano   | 0.845 | 0.824 | 91.7%    | 4.25     | 3.80     | 4.64     | 6.54     | 135 |
-| basic    | llm       | local      | –              | 0.775 | 0.778 | 92.1%    | –        | –        | –        | 0.09     | 146 |
-| basic    | llm       | openai     | –              | 0.826 | 0.817 | 92.5%    | –        | –        | –        | 0.46     | 148 |
-| basic    | recursive | local      | –              | 0.774 | 0.789 | 91.9%    | –        | –        | –        | 0.09     | 149 |
-| basic    | recursive | openai     | –              | 0.828 | 0.827 | 93.3%    | –        | –        | –        | 0.47     | 149 |
+Watch `n` as closely as the scores. The rows with small `n` lost questions to
+rate limiting, not to failures of retrieval, and a metric over 62 questions
+deserves less weight than the same metric over 150. Nothing here is dropped for
+looking bad — every run that completed is in the table.
+
+| Pipeline | Chunking  | Embeddings | Rewrite/rerank        | MRR   | nDCG  | Coverage | Accuracy | Complete | Relevant | Median s | n   |
+|----------|-----------|------------|-----------------------|-------|-------|----------|----------|----------|----------|----------|-----|
+| advanced | recursive | local      | gemini-3.5-flash-lite | 0.905 | 0.895 | 93.6%    | –        | –        | –        | 2.40     | 110 |
+| advanced | recursive | local      | gemini-3.5-flash-lite | 0.942 | 0.922 | 96.7%    | –        | –        | –        | 2.08     | 62  |
+| advanced | llm       | local      | gemini-3.5-flash-lite | 0.877 | 0.873 | 93.1%    | –        | –        | –        | 2.28     | 70  |
+| advanced | llm       | local      | gpt-4.1-nano          | 0.843 | 0.825 | 92.1%    | 4.15     | 3.77     | 4.67     | 2.64     | 150 |
+| advanced | llm       | openai     | gpt-4.1-nano          | 0.845 | 0.824 | 91.7%    | 4.25     | 3.80     | 4.64     | 6.54     | 135 |
+| basic    | llm       | local      | –                     | 0.775 | 0.778 | 92.1%    | –        | –        | –        | 0.09     | 146 |
+| basic    | llm       | openai     | –                     | 0.826 | 0.817 | 92.5%    | –        | –        | –        | 0.46     | 148 |
+| basic    | recursive | local      | –                     | 0.774 | 0.789 | 91.9%    | –        | –        | –        | 0.09     | 149 |
+| basic    | recursive | openai     | –                     | 0.828 | 0.827 | 93.3%    | –        | –        | –        | 0.47     | 149 |
 
 ## What the numbers say
 
@@ -92,15 +99,33 @@ That is why the deployed index uses recursive chunks. The aggregate scores could
 not distinguish the two; one question from the UI could. It is a good argument
 for driving the thing you built rather than only reading its dashboard.
 
-The top row of the table — recursive chunks at advanced depth, 0.905 MRR — is
-the deployed configuration, and it is the best number here. **Read it with two
-caveats.** It was re-ranked by a different model from the two rows below it,
-because Groq's free quota was exhausted by then, and its `n` is 110 rather than
-150 because rate limiting cost 40 questions. Both make it a weaker comparison
-than a difference of 0.905 against 0.843 looks. It is reported at the top of the
-table because it is what the app serves, not because it is the cleanest
-measurement in it — the clean one is the `basic` pair, which shares every
-condition and shows a dead tie.
+So I ran the two chunkers head to head at advanced depth, same re-ranking model,
+same worker count, same session — the three `gemini-3.5-flash-lite` rows. Under
+identical conditions recursive beats LLM chunking on every retrieval metric:
+
+| | LLM chunks | Recursive chunks |
+|---|---|---|
+| MRR | 0.877 | **0.942** |
+| nDCG | 0.873 | **0.922** |
+| keyword coverage | 93.1% | **96.7%** |
+
+**That comparison is weaker than it looks, and the honest reading needs saying.**
+Both arms lost more than half the test set to rate limiting — n=70 and n=62 out
+of 150 — because by then Groq's daily quota was gone and Gemini's was going. A
+60-question sample is thin, and if the dropped questions were not dropped at
+random the gap could be an artefact. I do not think they were, since a rate limit
+depends on when a request lands rather than what it asks, but that is an argument
+rather than a measurement.
+
+What makes the conclusion trustworthy is not this table alone. Three independent
+lines of evidence point the same way: the mechanism (rank 2 versus rank 16, the
+fact at character 36 versus 1,268), the head-to-head above, and the app itself
+answering the question correctly on one index and wrongly on the other. The
+`basic` pair — the only rows sharing every condition at full sample — shows a
+dead tie, which is exactly why the aggregate missed this for so long.
+
+The deployed row is the 0.905/n=110 one: a larger sample than the head-to-head,
+measured on the configuration that actually ships.
 
 **Where retrieval is weak is more interesting than the average.** By question
 category, the deployed configuration scores 1.000 MRR on temporal questions,
