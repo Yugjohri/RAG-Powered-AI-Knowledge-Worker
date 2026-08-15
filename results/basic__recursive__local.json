@@ -1,0 +1,26 @@
+{
+  "config": {
+    "strategy": "recursive",
+    "embeddings": "local",
+    "pipeline": "basic",
+    "model": "groq/openai/gpt-oss-120b"
+  },
+  "judge": "gemini/gemini-3.5-flash",
+  "questions": 150,
+  "retrieval": {
+    "n": 149,
+    "mrr": 0.7739196495152871,
+    "ndcg": 0.7889832130531127,
+    "keyword_coverage": 91.94630872483222,
+    "median_seconds": 0.08959479999975883,
+    "mrr_by_category": {
+      "comparative": 0.736111111111111,
+      "direct_fact": 0.8936594202898551,
+      "holistic": 0.5491666666666666,
+      "numerical": 0.775,
+      "relationship": 0.6754761904761905,
+      "spanning": 0.4885089285714286,
+      "temporal": 0.8261904761904761
+    }
+  }
+}

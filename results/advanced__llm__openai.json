@@ -1,0 +1,43 @@
+{
+  "config": {
+    "strategy": "llm",
+    "embeddings": "openai",
+    "pipeline": "advanced",
+    "model": "gpt-4.1-nano"
+  },
+  "judge": "gpt-4.1-mini",
+  "questions": 150,
+  "budget": "full",
+  "retrieval": {
+    "n": 150,
+    "mrr": 0.8447469135802469,
+    "ndcg": 0.823617428053654,
+    "keyword_coverage": 91.7,
+    "median_seconds": 3.391270799999802,
+    "mrr_by_category": {
+      "comparative": 0.9208333333333334,
+      "direct_fact": 0.8626209372637944,
+      "holistic": 0.675,
+      "numerical": 0.8,
+      "relationship": 0.8916666666666666,
+      "spanning": 0.6726785714285715,
+      "temporal": 1.0
+    }
+  },
+  "answers": {
+    "n": 135,
+    "accuracy": 4.2518518518518515,
+    "completeness": 3.8,
+    "relevance": 4.644444444444445,
+    "median_seconds": 6.539158999999927,
+    "accuracy_by_category": {
+      "comparative": 4.5,
+      "direct_fact": 4.402985074626866,
+      "holistic": 3.3,
+      "numerical": 3.6666666666666665,
+      "relationship": 4.4,
+      "spanning": 3.6875,
+      "temporal": 4.75
+    }
+  }
+}

@@ -1,0 +1,14 @@
+# Base theme only. The real stylesheet is styles.py, injected into the page;
+# these values exist so the app does not flash light before that CSS lands.
+[theme]
+base = "dark"
+primaryColor = "#4cc9f0"
+backgroundColor = "#0a0e13"
+secondaryBackgroundColor = "#121a23"
+textColor = "#e8eef5"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

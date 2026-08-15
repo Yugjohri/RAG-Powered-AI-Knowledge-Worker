@@ -1,0 +1,26 @@
+{
+  "config": {
+    "strategy": "llm",
+    "embeddings": "openai",
+    "pipeline": "basic",
+    "model": "groq/openai/gpt-oss-120b"
+  },
+  "judge": "gemini/gemini-3.5-flash",
+  "questions": 150,
+  "retrieval": {
+    "n": 148,
+    "mrr": 0.8262896825396826,
+    "ndcg": 0.8169180400781104,
+    "keyword_coverage": 92.48873873873875,
+    "median_seconds": 0.4607381999999234,
+    "mrr_by_category": {
+      "comparative": 0.8777777777777779,
+      "direct_fact": 0.8454656862745098,
+      "holistic": 0.7416666666666667,
+      "numerical": 0.8625,
+      "relationship": 0.9,
+      "spanning": 0.5573214285714285,
+      "temporal": 0.9916666666666666
+    }
+  }
+}

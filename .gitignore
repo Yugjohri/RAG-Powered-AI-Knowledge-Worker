@@ -1,0 +1,25 @@
+# secrets
+.env
+.env.*
+!.env.example
+# Streamlit's local secret store. config.toml IS committed - it is only theme.
+.streamlit/secrets.toml
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+
+# my working instructions to the assistant - not part of the project, and the
+# whole repo is published, so it stays out of it
+CLAUDE_PROMPT_*.md
+
+# build / local artifacts
+preprocessed_db/
+vector_db/
+summaries/
+space_logs.txt
+*.log
+
+# the index, the chunk cache and the results ARE committed on purpose:
+# they are what makes the published numbers reproducible.

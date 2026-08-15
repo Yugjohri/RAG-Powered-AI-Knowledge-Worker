@@ -1,8 +1,13 @@
+"""The test set: 150 questions with keywords, reference answers and categories."""
+
+from __future__ import annotations
+
 import json
 from pathlib import Path
+
 from pydantic import BaseModel, Field
 
-TEST_FILE = str(Path(__file__).parent / "tests.jsonl")
+TEST_FILE = Path(__file__).parent / "tests.jsonl"
 
 
 class TestQuestion(BaseModel):
@@ -14,11 +19,8 @@ class TestQuestion(BaseModel):
     category: str = Field(description="Question category (e.g., direct_fact, spanning, temporal)")
 
 
-def load_tests() -> list[TestQuestion]:
-    """Load test questions from JSONL file."""
-    tests = []
-    with open(TEST_FILE, "r", encoding="utf-8") as f:
-        for line in f:
-            data = json.loads(line.strip())
-            tests.append(TestQuestion(**data))
-    return tests
+def load_tests(path: str | Path | None = None) -> list[TestQuestion]:
+    """Load test questions from a JSONL file."""
+    file = Path(path) if path else TEST_FILE
+    with open(file, "r", encoding="utf-8") as f:
+        return [TestQuestion(**json.loads(line)) for line in f if line.strip()]

@@ -1,0 +1,10 @@
+streamlit==1.61.1
+chromadb==1.5.9
+litellm==1.96.2
+python-dotenv==1.2.2
+pydantic==2.13.4
+tenacity==9.1.4
+
+# chromadb needs sqlite >= 3.35 and some Linux hosts ship an older one.
+# Linux-only: there is no Windows wheel, and the local sqlite is new enough.
+pysqlite3-binary==0.5.4; sys_platform == "linux"
